@@ -22,7 +22,7 @@ export class LoanListComponent {
   }
 
   goToCreate() {
-    alert("Método no implementado")
+    this.router.navigate(["/create-loan"])
   }
 
   returnLoan(id: number) {

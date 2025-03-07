@@ -1,0 +1,59 @@
+<form [formGroup]="loanForm" (ngSubmit)="onSubmit()" class="container mt-4">
+    <!-- Nombre del Estudiante -->
+    <div class="mb-3">
+        <label class="form-label">Nombre del Estudiante</label>
+        <input type="text" formControlName="studentName" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['studentName'].errors }">
+        <div *ngIf="submitted && f['studentName'].errors" class="invalid-feedback">
+            <div *ngIf="f['studentName'].errors?.['required']">Campo requerido</div>
+            <div *ngIf="f['studentName'].errors?.['maxlength']">Máximo 200 caracteres</div>
+        </div>
+    </div>
+
+    <!-- Selector de Libro -->
+    <div class="mb-3">
+        <label class="form-label">Libro</label>
+        <select formControlName="bookId" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['bookId'].errors }">
+            <option value="" disabled selected>Seleccione un libro</option>
+            <option *ngFor="let book of books" [value]="book.id">{{ book.title }}</option>
+        </select>
+        <div *ngIf="submitted && f['bookId'].errors" class="invalid-feedback">
+            <div *ngIf="f['bookId'].errors?.['required']">Debe seleccionar un libro</div>
+        </div>
+    </div>
+
+    <!-- Fecha de Préstamo -->
+    <div class="mb-3">
+        <label class="form-label">Fecha de Préstamo</label>
+        <input type="date" formControlName="loanDate" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['loanDate'].errors }">
+        <div *ngIf="submitted && f['loanDate'].errors" class="invalid-feedback">
+            <div *ngIf="f['loanDate'].errors?.['required']">Campo requerido</div>
+        </div>
+    </div>
+
+    <!-- Fecha Límite de Devolución (returnDate) -->
+    <div class="mb-3">
+        <label class="form-label">Fecha Límite de Devolución</label>
+        <input type="date" formControlName="returnDate" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['returnDate'].errors }">
+        <div *ngIf="submitted && f['returnDate'].errors" class="invalid-feedback">
+            <div *ngIf="f['returnDate'].errors?.['required']">Campo requerido</div>
+        </div>
+    </div>
+
+    <!-- Fecha de Sanción (dueDate - Informativo) -->
+    <div class="mb-3">
+        <label class="form-label">Fecha de Sanción (3 días después de la devolución)</label>
+        <input type="date" formControlName="dueDate" class="form-control" readonly
+            [ngClass]="{ 'is-invalid': submitted && f['dueDate'].errors }">
+    </div>
+
+    <!-- Validación de fechas -->
+    <div *ngIf="loanForm.errors?.['returnDateInvalid'] && submitted" class="alert alert-danger mt-3">
+        La fecha límite de devolución debe ser posterior a la fecha de préstamo.
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Préstamo</button>
+</form>

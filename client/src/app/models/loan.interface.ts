@@ -1,7 +1,7 @@
 export interface Loan {
     id: number;
     bookId: number;
-    bookName: string;
+    bookName?: string;
     studentName: string;
     loanDate: string;
     returnDate: string;
