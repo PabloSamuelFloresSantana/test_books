@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -35,48 +37,59 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public ResponseEntity<String> save(Book book) {
+    public ResponseEntity<Map<String, String>> save(Book book) {
+        Map<String, String> response = new HashMap<>();
         try {
             bookMapper.save(book);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Libro creado exitosamente.");
+            response.put("message", "Libro creado exitosamente.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al crear el libro: " + e.getMessage());
+            response.put("message", "Error al crear el libro");
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
+
     @Override
-    public ResponseEntity<String> update(Book book) {
+    public ResponseEntity<Map<String, String>> update(Book book) {
+        Map<String, String> response = new HashMap<>();
         Book existingBook = bookMapper.findById(book.getId());
+
         if (existingBook == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("El libro no existe.");
+            response.put("message", "El libro no existe.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
         try {
             bookMapper.update(book);
-            return ResponseEntity.ok("Libro actualizado exitosamente.");
+            response.put("message", "Libro actualizado exitosamente.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar el libro: " + e.getMessage());
+            response.put("message", "Error al actualizar el libro");
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @Override
-    public ResponseEntity<String> deleteById(long id) {
+    public ResponseEntity<Map<String, String>> deleteById(long id) {
+        Map<String, String> response = new HashMap<>();
         Book existingBook = bookMapper.findById(id);
+
         if (existingBook == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("El libro no existe.");
+            response.put("message", "El libro no existe.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
         try {
             bookMapper.deleteById(id);
-            return ResponseEntity.ok("Libro eliminado exitosamente.");
+            response.put("message", "Libro eliminado exitosamente.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar el libro: " + e.getMessage());
+            response.put("message", "Error al eliminar el libro");
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

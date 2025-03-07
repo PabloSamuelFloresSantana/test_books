@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LoanServiceImpl implements LoanService {
@@ -40,45 +42,62 @@ public class LoanServiceImpl implements LoanService {
     }
 
     // Crear un préstamo
-    public ResponseEntity<String> createLoan(Loan loan) {
+    public ResponseEntity<Map<String, String>> createLoan(Loan loan) {
+        Map<String, String> response = new HashMap<>();
+
         // Verificar si el libro existe
         Book book = bookMapper.findById(loan.getBookId());
         if (book == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("El libro consultado no existe.");
+            response.put("message", "El libro consultado no existe.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
         // Verificar si hay stock disponible
         if (book.getCurrentStock() <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("No hay stock disponible para el libro.");
+            response.put("message", "No hay stock disponible para el libro.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        // Crear el préstamo
-        loanMapper.save(loan);
+        try {
+            // Crear el préstamo
+            loanMapper.save(loan);
 
-        // Disminuir el stock actual del libro
-        bookMapper.decreaseCurrentStock(loan.getBookId());
+            // Disminuir el stock actual del libro
+            bookMapper.decreaseCurrentStock(loan.getBookId());
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Préstamo creado exitosamente.");
+            response.put("message", "Préstamo creado exitosamente.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            response.put("message", "Error al crear el préstamo");
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     // Devolver un préstamo
-    public ResponseEntity<String> returnLoan(long loanId) {
+    public ResponseEntity<Map<String, String>> returnLoan(long loanId) {
+        Map<String, String> response = new HashMap<>();
+
         // Obtener el préstamo
         Loan loan = loanMapper.findById(loanId);
         if (loan == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("El préstamo no existe.");
+            response.put("message", "El préstamo no existe.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        // Eliminar el préstamo
-        loanMapper.deleteById(loanId);
+        try {
+            // Eliminar el préstamo
+            loanMapper.deleteById(loanId);
 
-        // Aumentar el stock actual del libro
-        bookMapper.increaseCurrentStock(loan.getBookId());
+            // Aumentar el stock actual del libro
+            bookMapper.increaseCurrentStock(loan.getBookId());
 
-        return ResponseEntity.ok("Préstamo devuelto exitosamente.");
+            response.put("message", "Préstamo devuelto exitosamente.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Error al devolver el préstamo");
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

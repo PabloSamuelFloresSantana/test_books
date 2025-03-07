@@ -5,14 +5,16 @@ import java.util.Date;
 public class Loan {
     private long id;
     private long bookId;
+    private String bookName;
     private String studentName;
     private Date loanDate;
     private Date returnDate;
     private Date dueDate;
 
-    public Loan(long id, long bookId, String studentName, Date loanDate, Date returnDate, Date dueDate) {
+    public Loan(long id, long bookId, String bookName, String studentName, Date loanDate, Date returnDate, Date dueDate) {
         this.id = id;
         this.bookId = bookId;
+        this.bookName = bookName;
         this.studentName = studentName;
         this.loanDate = loanDate;
         this.returnDate = returnDate;
@@ -36,6 +38,14 @@ public class Loan {
 
     public void setBookId(long bookId) {
         this.bookId = bookId;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public String getStudentName() {

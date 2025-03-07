@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/loans")
+@CrossOrigin(origins = {"*"})
 public class LoanController {
     private final LoanService loanService;
 
@@ -27,12 +29,12 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createLoan(@RequestBody Loan loan) {
+    public ResponseEntity<Map<String, String>> createLoan(@RequestBody Loan loan) {
         return loanService.createLoan(loan);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> returnLoan(@PathVariable("id") long id) {
+    public ResponseEntity<Map<String, String>> returnLoan(@PathVariable("id") long id) {
         return loanService.returnLoan(id);
     }
 }

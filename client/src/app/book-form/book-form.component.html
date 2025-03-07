@@ -1,0 +1,80 @@
+<form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="container mt-4">
+    <!-- Título -->
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input type="text" formControlName="title" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['title'].errors }">
+        <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
+            <div *ngIf="f['title'].errors?.['required']">Campo requerido</div>
+            <div *ngIf="f['title'].errors?.['maxlength']">Máximo 200 caracteres</div>
+        </div>
+    </div>
+
+    <!-- Sinopsis -->
+    <div class="mb-3">
+        <label class="form-label">Sinopsis</label>
+        <textarea formControlName="synopsis" rows="4" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['synopsis'].errors }"></textarea>
+        <div *ngIf="submitted && f['synopsis'].errors" class="invalid-feedback">
+            <div *ngIf="f['synopsis'].errors?.['required']">Campo requerido</div>
+            <div *ngIf="f['synopsis'].errors?.['minlength']">Mínimo 50 caracteres</div>
+        </div>
+    </div>
+
+    <!-- Fecha Publicación -->
+    <div class="mb-3">
+        <label class="form-label">Fecha de Publicación</label>
+        <input type="date" formControlName="publicationDate" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['publicationDate'].errors }">
+        <div *ngIf="submitted && f['publicationDate'].errors" class="invalid-feedback">
+            <div *ngIf="f['publicationDate'].errors?.['required']">Campo requerido</div>
+        </div>
+    </div>
+
+    <!-- Autores -->
+    <div class="mb-3">
+        <label class="form-label">Autores</label>
+        <input type="text" formControlName="authors" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['authors'].errors }">
+        <div *ngIf="submitted && f['authors'].errors" class="invalid-feedback">
+            <div *ngIf="f['authors'].errors?.['required']">Campo requerido</div>
+            <div *ngIf="f['authors'].errors?.['maxlength']">Máximo 300 caracteres</div>
+        </div>
+    </div>
+
+    <!-- Editoriales -->
+    <div class="mb-3">
+        <label class="form-label">Editoriales</label>
+        <input type="text" formControlName="publishers" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['publishers'].errors }">
+        <div *ngIf="submitted && f['publishers'].errors" class="invalid-feedback">
+            <div *ngIf="f['publishers'].errors?.['required']">Campo requerido</div>
+            <div *ngIf="f['publishers'].errors?.['maxlength']">Máximo 200 caracteres</div>
+        </div>
+    </div>
+
+    <!-- Stocks -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label class="form-label">Stock Total</label>
+            <input type="number" formControlName="totalStock" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['totalStock'].errors }">
+            <div *ngIf="submitted && f['totalStock'].errors" class="invalid-feedback">
+                <div *ngIf="f['totalStock'].errors?.['min']">El valor no puede ser negativo</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Stock Actual</label>
+            <input type="number" formControlName="currentStock" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['currentStock'].errors }">
+            <div *ngIf="submitted && f['currentStock'].errors" class="invalid-feedback">
+                <div *ngIf="f['currentStock'].errors?.['min']">El valor no puede ser negativo</div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        {{ isEdit ? 'Actualizar' : 'Crear' }} Libro
+    </button>
+</form>
